@@ -17,4 +17,16 @@ export class PinController {
       await BaseDatabase.destroyConnection();
     }
   };
+
+  public getAllPins = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const token = req.headers.authorization as string;
+      const pins = await this.pinBusiness.getAllPins(token);
+      res.status(200).send({ message: `Got all pins successfully`, pins });
+    } catch (error) {
+      res.status(400).send({ message: error.message });
+    } finally {
+      await BaseDatabase.destroyConnection();
+    }
+  };
 }

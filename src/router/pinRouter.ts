@@ -18,3 +18,4 @@ const pinController = new PinController(
 );
 
 pinRouter.post("/", pinController.createPin);
+pinRouter.get("/", pinController.getAllPins);
