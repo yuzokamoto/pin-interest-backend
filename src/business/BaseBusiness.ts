@@ -1,5 +1,5 @@
 export abstract class BaseBusiness {
-  protected validateInput(input: any) {
+  protected validateInput(input: any): void {
     let errors = [];
     for (const key in input) {
       if (input[key] !== false && !input[key]) {

@@ -41,4 +41,23 @@ export class PinBusiness extends BaseBusiness {
     const pin = new Pin(id, author, title, subtitle, date, file, tags);
     await this.pinDatabase.createPin(pin);
   }
+
+  public async getAllPins(token: string): Promise<Pin[]> {
+    if (typeof token !== "string") {
+      throw new Error(`Access denied: invalid token`);
+    }
+
+    const tokenData = this.authenticator.getTokenData(token);
+    if (typeof tokenData !== "object" || !("id" in tokenData)) {
+      throw new Error(`Access denied: invalid token`);
+    }
+
+    const user = await this.userDatabase.getUserById((tokenData as any).id);
+    if (!user) {
+      throw new Error(`Access denied: invalid token`);
+    }
+
+    const pins = await this.pinDatabase.getAllPins();
+    return pins;
+  }
 }
