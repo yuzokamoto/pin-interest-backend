@@ -35,4 +35,18 @@ export class PinDatabase extends BaseDatabase {
     }
     return pins;
   }
+
+  public async getPinById(pinId: string): Promise<Pin | []> {
+    const data = await this.getConnection()
+      .select()
+      .from(PinDatabase.TABLE_NAME)
+      .where({ id: pinId })
+      .first();
+
+    if (!data) {
+      return [];
+    }
+
+    return this.toModelPin(data);
+  }
 }

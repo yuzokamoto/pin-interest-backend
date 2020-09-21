@@ -42,7 +42,7 @@ export class PinBusiness extends BaseBusiness {
     await this.pinDatabase.createPin(pin);
   }
 
-  public async getAllPins(token: string): Promise<Pin[]> {
+  public async getPin(token: string, pinId: string): Promise<Pin | Pin[] | []> {
     if (typeof token !== "string") {
       throw new Error(`Access denied: invalid token`);
     }
@@ -57,7 +57,10 @@ export class PinBusiness extends BaseBusiness {
       throw new Error(`Access denied: invalid token`);
     }
 
-    const pins = await this.pinDatabase.getAllPins();
-    return pins;
+    if (!pinId) {
+      return this.pinDatabase.getAllPins();
+    }
+
+    return this.pinDatabase.getPinById(pinId);
   }
 }
