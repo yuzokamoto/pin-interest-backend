@@ -18,11 +18,12 @@ export class PinController {
     }
   };
 
-  public getAllPins = async (req: Request, res: Response): Promise<void> => {
+  public getPin = async (req: Request, res: Response): Promise<void> => {
     try {
       const token = req.headers.authorization as string;
-      const pins = await this.pinBusiness.getAllPins(token);
-      res.status(200).send({ message: `Got all pins successfully`, pins });
+      const pinId = req.params.id;
+      const result = await this.pinBusiness.getPin(token, pinId);
+      res.status(200).send({ message: `Got all pins successfully`, result });
     } catch (error) {
       res.status(400).send({ message: error.message });
     } finally {
