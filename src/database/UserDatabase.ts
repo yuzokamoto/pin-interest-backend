@@ -31,6 +31,17 @@ export class UserDatabase extends BaseDatabase {
       .into(UserDatabase.TABLE_NAME);
   }
 
+  public async getUserById(id: string): Promise<User | null> {
+    const data = await this.getConnection()
+      .select()
+      .from(UserDatabase.TABLE_NAME)
+      .where({ id })
+      .first();
+
+    const user = this.toModelUser(data);
+    return user;
+  }
+
   public async getUserByEmail(email: string): Promise<User | null> {
     const data = await this.getConnection()
       .select()

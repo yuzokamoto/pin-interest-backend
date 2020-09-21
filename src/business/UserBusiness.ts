@@ -19,7 +19,7 @@ export class UserBusiness extends BaseBusiness {
     this.validateInput(input);
 
     const { name, username, email, password } = input;
-    const id = this.idGenerator.generate();
+    const id = this.idGenerator.userId();
     const hashedPassword = await this.hashManager.hash(password);
 
     const user = new User(id, name, username, email, hashedPassword);
