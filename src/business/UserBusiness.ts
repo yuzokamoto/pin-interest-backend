@@ -1,6 +1,7 @@
 import { UserDatabase } from "../database/UserDatabase";
 import { User } from "../model/user/User";
 import { Authenticator } from "../services/Authenticator";
+import { HashManager } from "../services/HashManager";
 import { IdGenerator } from "../services/IdGenerator";
 import { BaseBusiness } from "./BaseBusiness";
 
@@ -8,7 +9,8 @@ export class UserBusiness extends BaseBusiness {
   constructor(
     private userDatabase: UserDatabase,
     private idGenerator: IdGenerator,
-    private authenticator: Authenticator
+    private authenticator: Authenticator,
+    private hashManager: HashManager
   ) {
     super();
   }
@@ -18,7 +20,9 @@ export class UserBusiness extends BaseBusiness {
 
     const { name, username, email, password } = input;
     const id = this.idGenerator.generate();
-    const user = new User(id, name, username, email, password);
+    const hashedPassword = await this.hashManager.hash(password);
+
+    const user = new User(id, name, username, email, hashedPassword);
     await this.userDatabase.createUser(user);
 
     const token = this.authenticator.generateToken({ id });
@@ -33,7 +37,13 @@ export class UserBusiness extends BaseBusiness {
     if (!user) {
       throw new Error(`Login failed: check username and/or password`);
     }
-    if (password !== user.getPassword()) {
+
+    const hashedPassword = user.getPassword();
+    const isPasswordCorrect = this.hashManager.compare(
+      password,
+      hashedPassword
+    );
+    if (!isPasswordCorrect) {
       throw new Error(`Login failed: check username and/or password`);
     }
 
