@@ -1,4 +1,7 @@
 import { Router } from "express";
+// import multer from "multer";
+// import { multerConfig } from "../config/multer";
+
 import { PinBusiness } from "../business/PinBusiness";
 import { PinController } from "../controller/PinController";
 import { PinDatabase } from "../database/PinDatabase";
@@ -17,6 +20,7 @@ const pinController = new PinController(
   )
 );
 
+// pinRouter.post("/", multer(multerConfig).single("file"), pinController.createPin);
 pinRouter.post("/", pinController.createPin);
 pinRouter.get("/", pinController.getPin);
 pinRouter.get("/:id", pinController.getPin);
