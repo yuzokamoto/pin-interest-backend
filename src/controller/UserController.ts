@@ -8,8 +8,10 @@ export class UserController {
   public createUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const input = req.body;
-      const token = await this.userBusiness.createUser(input);
-      res.status(200).send({ message: `User created successfully`, token });
+      const { token, user } = await this.userBusiness.createUser(input);
+      res
+        .status(200)
+        .send({ message: `User created successfully`, token, user });
     } catch (error) {
       res.status(400).send({ message: error.message });
     } finally {
@@ -20,8 +22,10 @@ export class UserController {
   public login = async (req: Request, res: Response): Promise<void> => {
     try {
       const input = req.body;
-      const token = await this.userBusiness.login(input);
-      res.status(200).send({ message: `User logged in successfully`, token });
+      const { token, user } = await this.userBusiness.login(input);
+      res
+        .status(200)
+        .send({ message: `User logged in successfully`, token, user });
     } catch (error) {
       res.status(400).send({ message: error.message });
     } finally {
