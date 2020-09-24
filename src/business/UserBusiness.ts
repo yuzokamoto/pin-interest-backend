@@ -1,4 +1,5 @@
 import { UserDatabase } from "../database/UserDatabase";
+import { Auth } from "../model/user/Auth";
 import { User } from "../model/user/User";
 import { Authenticator } from "../services/Authenticator";
 import { HashManager } from "../services/HashManager";
@@ -15,7 +16,7 @@ export class UserBusiness extends BaseBusiness {
     super();
   }
 
-  public async createUser(input: any): Promise<string> {
+  public async createUser(input: any): Promise<Auth> {
     this.validateInput(input);
 
     const { name, username, email, password } = input;
@@ -26,10 +27,10 @@ export class UserBusiness extends BaseBusiness {
     await this.userDatabase.createUser(user);
 
     const token = this.authenticator.generateToken({ id });
-    return token;
+    return { token, user };
   }
 
-  public async login(input: any): Promise<string> {
+  public async login(input: any): Promise<Auth> {
     this.validateInput(input);
 
     const { email, password } = input;
@@ -49,6 +50,6 @@ export class UserBusiness extends BaseBusiness {
 
     const tokenData = { id: user.getId() };
     const token = this.authenticator.generateToken(tokenData);
-    return token;
+    return { token, user };
   }
 }
