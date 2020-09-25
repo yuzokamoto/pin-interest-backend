@@ -8,7 +8,7 @@ export class PinController {
   public createPin = async (req: Request, res: Response): Promise<void> => {
     try {
       const input = req.body;
-      const token = req.headers.authorization as string;
+      const [bearer, token] = (req.headers.authorization as string).split(" ");
       await this.pinBusiness.createPin(input, token);
       res.status(200).send({ message: `Pin created successfully` });
     } catch (error) {
@@ -20,7 +20,7 @@ export class PinController {
 
   public getPin = async (req: Request, res: Response): Promise<void> => {
     try {
-      const token = req.headers.authorization as string;
+      const [bearer, token] = (req.headers.authorization as string).split(" ");
       const pinId = req.params.id;
       const result = await this.pinBusiness.getPin(token, pinId);
       res.status(200).send({ message: `Got all pins successfully`, result });
